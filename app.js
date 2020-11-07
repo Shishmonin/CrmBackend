@@ -2,8 +2,6 @@ const express = require('express');
 const mongo = require('./config/mongo');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-
 const logger = require('morgan');
 const cors = require('cors');
 const sassMiddleware = require('node-sass-middleware');
@@ -17,10 +15,6 @@ const app = express();
 
 app.use(passport.initialize());
 require('./config/passport')(passport);
-
-// app.use(bodyParser.urlencoded({ extended: true}));
-// app.use(bodyParser.json());
-
 app.use(logger('dev'));
 app.use(cors());
 app.use(express.json());
@@ -33,7 +27,7 @@ app.use(sassMiddleware({
     sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use('/uploads',express.static('uploads'));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/category', categoryRoutes);
