@@ -2,41 +2,113 @@
   <div class="card-header card-header-primary">
     <h4 class="card-title ">Список задач</h4>
   </div>
-  <div class="card-body">
-    <div class="table-responsive">
-      <table class="table">
-        <thead class=" text-primary">
-        <th>ID</th>
-        <th>Название</th>
-        <th>Категория</th>
-        <th>Приоритет</th>
-        <th>Статус</th>
-        <th>Дата</th>
-        </thead>
-        <tbody>
-        <tr *ngFor="let task of tasks">
-          <td>
-            {{task.id}}
+  <div class="card-body table-responsive">
+      <table [dataSource]="dataSource" mat-table>
+
+        <ng-container matColumnDef="color">
+          <th *matHeaderCellDef mat-header-cell></th>
+          <td
+            class="col-color"
+            *matCellDef="let task"
+              [style.background-color]="getPriorityColor(task)"
+              mat-cell>
           </td>
-          <td>
+        </ng-container>
+
+        <ng-container matColumnDef="id">
+          <th *matHeaderCellDef mat-header-cell></th>
+          <td
+            class="col-id"
+            *matCellDef="let index = index"
+              mat-cell>
+            {{index + 1}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="title">
+          <th *matHeaderCellDef mat-header-cell>Название</th>
+          <td
+            class="col-title"
+            *matCellDef="let task"
+              [style.completed]="task.completed"
+              mat-cell>
             {{task.title}}
           </td>
-          <td>
+        </ng-container>
 
+        <ng-container matColumnDef="date">
+          <th *matHeaderCellDef mat-header-cell>Срок</th>
+          <td
+            class="col-date"
+            *matCellDef="let task"
+              [ngClass]="{'completed': task.completed, 'nodate': task.date == null}"
+              mat-cell>
+            {{task.date | date : 'medium'}}
           </td>
-          <td>
+        </ng-container>
 
+        <ng-container matColumnDef="priority">
+          <th *matHeaderCellDef mat-header-cell>Приоритет</th>
+          <td
+              class="col-priority"
+              *matCellDef="let task"
+              [ngClass]="{'completed': task.completed, 'nopriority': task.priority == null}"
+              mat-cell>
+            {{task.priority ? task.priority.title : 'Без приоритета'}}
           </td>
-          <td>
+        </ng-container>
 
+        <ng-container matColumnDef="category">
+          <th *matHeaderCellDef mat-header-cell>Категория</th>
+          <td
+              class="col-category"
+              *matCellDef="let task"
+              [ngClass]="{'completed': task.completed, 'nocategory': task.category == null, 'link': !task.completed && task.category}"
+              mat-cell>
+            {{task.category ? task.category.title : 'Без категории'}}
           </td>
-          <td>
+        </ng-container>
 
-          </td>
-        </tr>
-        </tbody>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+<!--        <thead class=" text-primary">-->
+<!--        <th># </th>-->
+<!--        <th>Название</th>-->
+<!--        <th>Категория</th>-->
+<!--        <th>Приоритет</th>-->
+<!--        <th>Дата</th>-->
+<!--        <th>Статус</th>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <tr-->
+<!--          *ngFor="let task of tasks; let i = index"-->
+<!--          [class.completed] = "task.completed"-->
+<!--        >-->
+<!--          <td>{{i + 1}}</td>-->
+<!--          <td>{{task.title}}</td>-->
+<!--          <td [class.novalue] = "task.category == null">{{task.category ? task.category.title : "-"}}</td>-->
+<!--          <td [class.novalue] = "task.priority == null">{{task.priority ? task.priority.title : "-"}}</td>-->
+<!--          <td [class.novalue] = "task.date == null">{{task.date ? (task.date | date : 'medium') : "-"}}</td>-->
+<!--          <td>-->
+<!--            <div class="form-check">-->
+<!--              <label class="form-check-label">-->
+<!--                <input-->
+<!--                  class="form-check-input" type="checkbox"-->
+<!--                  value=""-->
+<!--                  [checked] = "task.completed"-->
+<!--                  (click) = "toggleTaskCompleted(task)"-->
+<!--                >-->
+<!--                <span class="form-check-sign">-->
+<!--                    <span class="check"></span>-->
+<!--                  </span>-->
+<!--              </label>-->
+<!--            </div>-->
+<!--          </td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
       </table>
-    </div>
   </div>
 </div>
 
